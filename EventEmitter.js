@@ -37,15 +37,9 @@ function EventEmitter(){
     this._destroy = false;
     this.handlers = {};
     this.onceHandlers = {};
-    this.cachedValue = {};
 }
 
 Object.assign(EventEmitter.prototype, {
-    emitCachedEvent:  function(type, handler){
-        if(this.cachedValue[type]){
-            invokeEventCallback(handler, this.cachedValue[type]);
-        }
-    },
     destroyWarn: function(){
         if(this._destroy){
             console.warn('this event emitter instance was destroyed!!');
@@ -55,7 +49,6 @@ Object.assign(EventEmitter.prototype, {
     },
     addEventListener: function(type, handler){
         if(this.destroyWarn()) return;
-        this.emitCachedEvent(type.toString(), handler);
         insertHandler(this.handlers, type.toString(), handler);
     },
     removeEventListener: function(type, handler){
@@ -65,7 +58,6 @@ Object.assign(EventEmitter.prototype, {
     },
     once: function(type, handler){
         if(this.destroyWarn()) return;
-        this.emitCachedEvent(type, handler);
         insertHandler(this.onceHandlers, type, handler);
     },
     on: function(type, handler){
@@ -76,19 +68,14 @@ Object.assign(EventEmitter.prototype, {
         if(this.destroyWarn()) return;
         this.removeEventListener(type, handler);
     },
-    trigger: function(type, event, cache){
+    trigger: function(type, event){
         if(this.destroyWarn()) return;
-        if(cache){
-            this.cachedValue[type] = event;
-        }else{
-            delete this.cachedValue[type];
-        }
         invokeHandler(this.handlers, type, event);
         invokeHandler(this.onceHandlers, type, event);
     },
     destory: function(){
         this._destroy = true;
-        this.handlers = this.onceHandlers = this.cachedValue = null;
+        this.handlers = this.onceHandlers = null;
     }
 });
 

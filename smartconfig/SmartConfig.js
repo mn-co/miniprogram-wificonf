@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", {
 	value: !0
 }),
 exports.SmartConfig = void 0;
-var EventEmitterImpl = require("./EventEmitter").EventEmitter;
+var EventEmitterImpl = require("../EventEmitter").EventEmitter;
 var delay = require("../util").delay;
 var tslib_1 = require("tslib"),
 esptouchTaskParameter_1 = require("./base/esptouchTaskParameter"),
